@@ -97,4 +97,10 @@ public class PlayerMovementScript : MonoBehaviour {
 
         #endregion
     }
+
+    /*public void ledgeGrabTrigger(Collider2D collider) {
+        if (LayerMask.LayerToName(collider.gameObject.layer) == "ground") {
+
+        }
+    }*/
 }
