@@ -57,6 +57,9 @@ public class PlayerMovementScript : MonoBehaviour {
 
         velocity.x += movement * (grounded ? groundVel : airSpeed);
         if (grounded) velocity.x *= friction;
+
+        print(movement == -Mathf.Sign(velocity.x));
+
         velocity.x = Mathf.Clamp(velocity.x, -maxAirVel, maxAirVel);
 
         #endregion
@@ -67,12 +70,13 @@ public class PlayerMovementScript : MonoBehaviour {
         jumpBufferTimer += Time.deltaTime;
         coyoteTimer += Time.deltaTime;
 
-        if (jumpPressed) jumpBufferTimer = 0;
-        if (grounded) coyoteTimer = 0;
+        if (jumpPressed) jumpBufferTimer = -0;
+        if (grounded) coyoteTimer = -0;
 
         if (jumpBufferTimer < jumpBufferTime && (grounded || coyoteTimer < coyoteTime)) {
+
             velocity.y = Mathf.Sqrt(2 * rb.gravityScale * Mathf.Abs(Physics.gravity.y) * jumpVector.y);
-            velocity.x += jumpVector.x * Math.Sign(movement) * Mathf.Abs(velocity.x) / groundSpeed;
+            velocity.x += jumpVector.x * Math.Sign(movement) * Mathf.Abs(velocity.x) / groundSpeed; // using a different sign function because mathf is weird
 
             jumpBufferTimer = coyoteTimer = Mathf.Infinity;
         }
