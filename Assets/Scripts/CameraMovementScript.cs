@@ -12,6 +12,13 @@ public class CameraMovementScript : MonoBehaviour {
     public bool lockY;
     public Vector2 lockPosition;
 
+    private void Start() {
+        transform.position = new Vector3(
+            lockX ? lockPosition.x : follow.position.x,
+            lockY ? lockPosition.y : follow.position.y,
+            -10);
+    }
+
     private void FixedUpdate() {
         transform.position = Vector3.Lerp(follow.position, transform.position, followSpeed);
         
