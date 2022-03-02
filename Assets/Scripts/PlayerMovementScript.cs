@@ -16,12 +16,21 @@ public class PlayerMovementScript : MonoBehaviour {
     Vector2 floorUp = Vector2.up;
     Vector2 floorRight = Vector2.right;
 
+<<<<<<< Updated upstream
     // horizontal movement
+=======
+    float movement;
+    bool jumpPressed;
+
+>>>>>>> Stashed changes
     public float groundSpeed;
     public float airSpeed;
     public float accelFriction;
     public float decelFriction;
+<<<<<<< Updated upstream
     public float maxFloorAngle;
+=======
+>>>>>>> Stashed changes
 
     //vertical movement
     public Vector2 jumpVector;
@@ -33,11 +42,19 @@ public class PlayerMovementScript : MonoBehaviour {
 
     public int groundMask;
 
+    float ogGravityScale;
+
     #endregion
 
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
+<<<<<<< Updated upstream
         jumpBufferTimer = jumpBufferTime;
+=======
+        col = GetComponent<BoxCollider2D>();
+
+        ogGravityScale = rb.gravityScale;
+>>>>>>> Stashed changes
     }
 
     #region controller input
@@ -88,6 +105,7 @@ public class PlayerMovementScript : MonoBehaviour {
 
         #region input
 
+<<<<<<< Updated upstream
         movement = joystickPressed * joystick.x;
 
         jumpInput = false;
@@ -97,6 +115,10 @@ public class PlayerMovementScript : MonoBehaviour {
         }
         else jumpInputLastFrame = false;
 
+=======
+        movement = Input.GetAxisRaw("Horizontal");
+        jumpPressed = Input.GetButtonDown("Jump");
+>>>>>>> Stashed changes
 
         #endregion
 
@@ -107,11 +129,17 @@ public class PlayerMovementScript : MonoBehaviour {
         float groundVel = groundSpeed * (1 / currentFriction - 1);
         float maxAirVel = jumpVector.x + groundSpeed;
 
+<<<<<<< Updated upstream
         velocity.x = (velocity.x + movement
                    * (grounded ? groundVel : airSpeed))
                    * (grounded ? currentFriction : 1);
+=======
+        velocity.x = (velocity.x + movement * (grounded ? groundVel : airSpeed)) * (grounded ? currentFriction : 1);
+>>>>>>> Stashed changes
 
         velocity.x = Mathf.Clamp(velocity.x, -maxAirVel, maxAirVel);
+
+        print(velocity.x + " : " + maxAirVel);
 
         #endregion
 
@@ -172,6 +200,7 @@ public class PlayerMovementScript : MonoBehaviour {
         #endregion
     }
 
+<<<<<<< Updated upstream
     private void OnCollisionStay2D(Collision2D collision) {
         if (collision.gameObject.layer != groundMask) return;
 
@@ -204,11 +233,21 @@ public class PlayerMovementScript : MonoBehaviour {
             if (!grounded && Math.Sign(movement) == dir)
                 StartCoroutine(ledgePullUp(dir));
         }
+=======
+    public void ledgeGrabTrigger(Collider2D collider, int dir) {
+        if (LayerMask.LayerToName(collider.gameObject.layer) == "ground") {
+            if (!grounded && Math.Sign(movement) == dir)
+                StartCoroutine(ledgePullUp(dir));
+        }
+>>>>>>> Stashed changes
     }
 
     IEnumerator ledgePullUp(int dir) {
         yield return null;
     }
+<<<<<<< Updated upstream
 
     #endregion
+=======
+>>>>>>> Stashed changes
 }
