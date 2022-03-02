@@ -419,10 +419,7 @@ MonoBehaviour:
   coyoteTime: 0.1
   slideSpeed: 0.25
   maxFallSpeed: -20
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  groundCheckDist: 0.5
+  groundMask: 10
 --- !u!50 &212583671
 Rigidbody2D:
   serializedVersion: 4
