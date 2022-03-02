@@ -12,9 +12,13 @@ public class PlayerMovementScript : MonoBehaviour {
     public LayerMask groundMask;
     public float groundCheckDist;
 
+    float movement;
+    bool jumpPressed;
+
     public float groundSpeed;
     public float airSpeed;
-    public float friction;
+    public float accelFriction;
+    public float decelFriction;
 
     public Vector2 jumpVector;
     public float jumpBufferTime;
@@ -25,11 +29,15 @@ public class PlayerMovementScript : MonoBehaviour {
     Vector2 velocity;
     bool grounded;
 
+    float ogGravityScale;
+
     #endregion
 
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<BoxCollider2D>();
+
+        ogGravityScale = rb.gravityScale;
     }
 
     private void Update() {
@@ -44,23 +52,23 @@ public class PlayerMovementScript : MonoBehaviour {
 
         #region input
 
-        float movement = Input.GetAxisRaw("Horizontal");
-        bool jumpPressed = Input.GetButtonDown("Jump");
+        movement = Input.GetAxisRaw("Horizontal");
+        jumpPressed = Input.GetButtonDown("Jump");
 
         #endregion
 
 
         #region horizontal movement
 
-        float groundVel = groundSpeed * (1 / friction - 1);
-        float maxAirVel = jumpVector.x + groundVel;
+        float currentFriction = movement == 0 ? decelFriction : accelFriction;
+        float groundVel = groundSpeed * (1 / currentFriction - 1);
+        float maxAirVel = jumpVector.x + groundSpeed;
 
-        velocity.x += movement * (grounded ? groundVel : airSpeed);
-        if (grounded) velocity.x *= friction;
-
-        print(movement == -Mathf.Sign(velocity.x));
+        velocity.x = (velocity.x + movement * (grounded ? groundVel : airSpeed)) * (grounded ? currentFriction : 1);
 
         velocity.x = Mathf.Clamp(velocity.x, -maxAirVel, maxAirVel);
+
+        print(velocity.x + " : " + maxAirVel);
 
         #endregion
 
@@ -98,9 +106,14 @@ public class PlayerMovementScript : MonoBehaviour {
         #endregion
     }
 
-    /*public void ledgeGrabTrigger(Collider2D collider) {
+    public void ledgeGrabTrigger(Collider2D collider, int dir) {
         if (LayerMask.LayerToName(collider.gameObject.layer) == "ground") {
-
+            if (!grounded && Math.Sign(movement) == dir)
+                StartCoroutine(ledgePullUp(dir));
         }
-    }*/
+    }
+
+    IEnumerator ledgePullUp(int dir) {
+        yield return null;
+    }
 }
